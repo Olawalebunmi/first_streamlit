@@ -76,5 +76,6 @@ result = datahub.groupby(by=datahub["date"])["Field"].sum().reset_index()
 #To add a straight line beloe chart
 st.divider()
 
-
+#fig3 = go.Figure()
+#fig3.add_trace(go.Bar(x = result1)) = 
 
