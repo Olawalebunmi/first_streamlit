@@ -124,7 +124,7 @@ st.divider()
 
 # Create a pie chart using Plotly
 fig = px.pie(
-    df,
+    datahub,
     names="motivation",
     values="Values",
     title="motivation Pie Chart",
