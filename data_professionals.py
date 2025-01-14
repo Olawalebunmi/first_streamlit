@@ -21,14 +21,14 @@ except Exception as e:
 st.markdown('<style>div.block-container{padding-top:1rem;}</style>', unsafe_allow_html=True)
 
 # Displaying an Image
-try:
-    image = Image.open('Data Analyst.png')
-except FileNotFoundError:
-    st.error("Image file not found. Please ensure the file is in the correct directory.")
-    image = None  # Define image as None to prevent further errors
+#try:
+ #   image = Image.open('Data Analyst.png')
+#except FileNotFoundError:
+ #   st.error("Image file not found. Please ensure the file is in the correct directory.")
+  #  image = None  # Define image as None to prevent further errors
 
-if image:
-    st.image(image, width=100)
+#if image:
+ #   st.image(image, width=100)
 
 
 #try:
