@@ -24,7 +24,17 @@ st.markdown('<style>div.block-container{padding-top:1rem;}</style>', unsafe_allo
 try:
     image = Image.open('Data Analyst.png')
 except FileNotFoundError:
-    print("Image file not found. Please ensure the file is in the correct directory.")
+    st.error("Image file not found. Please ensure the file is in the correct directory.")
+    image = None  # Define image as None to prevent further errors
+
+if image:
+    st.image(image, width=100)
+
+
+#try:
+ #   image = Image.open('Data Analyst.png')
+#except FileNotFoundError:
+ #   print("Image file not found. Please ensure the file is in the correct directory.")
 #image = Image.open('Data Analyst.png')
 
 col1, col2 = st.columns([0.1, 0.9])
