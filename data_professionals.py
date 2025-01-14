@@ -51,17 +51,32 @@ with col2:
             height=500,
         )
         st.plotly_chart(fig, use_container_width=True)
-# Add corresponding data table
-st.write("### Industry and Tools Data Table")
-st.dataframe(datahub[["industry", "tools"]])
     except KeyError as e:
         st.error(f"Missing required columns for chart: {e}")
 
 # View and download grouped data
-#st.markdown("### Tools and Industry")
-#_, view1, dwn1 = st.columns([0.15, 0.7, 0.15])
+st.markdown("### Tools and Industry")
+_, view1, dwn1 = st.columns([0.15, 0.7, 0.15])
 
+with view1:
+    expander = st.expander("View grouped data")
+    try:
+        grouped_data = datahub.groupby("tools")["industry"].sum()
+        expander.write(grouped_data)
+    except KeyError as e:
+        st.error(f"Missing required columns for grouping: {e}")
 
+with dwn1:
+    try:
+        csv_data = grouped_data.to_csv().encode("utf-8")
+        st.download_button(
+            "Download Data",
+            data=csv_data,
+            file_name="Tools_and_Industry.csv",
+            mime="text/csv",
+        )
+    except NameError:
+        st.error("Data not available for download.")
 
 # Tools and Experience
 with col3:
