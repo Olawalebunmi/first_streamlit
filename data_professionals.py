@@ -51,7 +51,7 @@ col1, col2 = st.columns([0.1, 0.9])
     #</style>
     #<center><h1 class="title-test">Data Analyst Survey Dashboard</h1></center>"""
 with col2:
-    st.markdown(html_title, unsafe_allow_html=True)
+   # st.markdown(html_title, unsafe_allow_html=True)
 
 col3, col4, col5 = st.columns([0.1, 0.45, 0.45])
 
