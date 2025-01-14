@@ -122,21 +122,3 @@ with dwn2:
 st.divider()
 
 
-# Create a pie chart using Plotly
-try:
-    fig = px.pie(
-    datahub,
-    names="motivation",
-    values="Values",
-    title="motivation Pie Chart",
-    color_discrete_sequence=px.colors.sequential.RdBu
-)
-
-# Display the pie chart in Streamlit
-st.plotly_chart(fig, use_container_width=True)
-
-# Add a data table below the chart
-st.write("### motivation Table")
-st.dataframe(datahub)
-# Placeholder for additional charts
-st.markdown("### Additional Analysis (Placeholder)")
