@@ -10,7 +10,7 @@ st.set_page_config(page_title="Data Analyst Dashboard", layout="wide")
 # Reading in data
 try:
     datahub = pd.read_csv("newbies.csv", encoding="utf-8")
-    datahub["date"] = pd.to_datetime(datahub["date"])  # Ensure 'date' is in datetime format
+    #datahub["date"] = pd.to_datetime(datahub["date"])  # Ensure 'date' is in datetime format
 except FileNotFoundError:
     st.error("The file 'newbies.csv' was not found. Please ensure it is in the correct directory.")
     st.stop()  # Stop execution if the file is missing
