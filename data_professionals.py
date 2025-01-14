@@ -6,6 +6,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
+# Page configuration
+st.set_page_config("layout = wide")
+
 # Reading in data
 try:
     datahub = pd.read_csv("newbies.csv", encoding="utf-8")
@@ -13,9 +16,6 @@ except FileNotFoundError:
     st.error("The file 'newbies.csv' was not found. Please ensure it is in the correct directory.")
 except Exception as e:
     st.error(f"An error occured while reading the csv file:{e}")
-
-# Page configuration
-st.set_page_config("layout = wide")
 
 # Customizing page style
 st.markdown('<style>div.block-container{padding-top:1rem;}</style>', unsafe_allow_html=True)
