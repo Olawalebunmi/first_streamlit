@@ -42,11 +42,11 @@ with col2:
     try:
         fig = px.bar(
             datahub,
-            x="Current Role",
-            y="Field",
-            labels={"Field": "Field"},
-            title="Role and Field of Analysts",
-            hover_data=["Field"],
+            x="industry",
+            y="tools",
+            labels={"industry": "industry"},
+            title="Industry and Tools of Analysts",
+            hover_data=["industry"],
             template="plotly_white",
             height=500,
         )
@@ -55,13 +55,13 @@ with col2:
         st.error(f"Missing required columns for chart: {e}")
 
 # View and download grouped data
-st.markdown("### Roles and Fields")
+st.markdown("### Industry and Tools")
 _, view1, dwn1 = st.columns([0.15, 0.7, 0.15])
 
 with view1:
     expander = st.expander("View grouped data")
     try:
-        grouped_data = datahub.groupby("Role")["Field"].sum()
+        grouped_data = datahub.groupby("Tools")["industry"].sum()
         expander.write(grouped_data)
     except KeyError as e:
         st.error(f"Missing required columns for grouping: {e}")
@@ -72,23 +72,23 @@ with dwn1:
         st.download_button(
             "Download Data",
             data=csv_data,
-            file_name="Role_and_Field.csv",
+            file_name="Tools_and_Industry.csv",
             mime="text/csv",
         )
     except NameError:
         st.error("Data not available for download.")
 
-# Total Fields Over Time
-st.markdown("### Fields Over Time")
+# Total Tools Over Time
+st.markdown("### Tools Over Time")
 try:
     datahub["Month_Year"] = datahub["date"].dt.strftime("%b'%y")
-    result = datahub.groupby("Month_Year")["Field"].sum().reset_index()
+    result = datahub.groupby("Month_Year")["tools"].sum().reset_index()
 
     fig1 = px.line(
         result,
         x="Month_Year",
-        y="Field",
-        title="Total Fields Over Time",
+        y="Tools",
+        title="Total Toolss Over Time",
         template="plotly_white",
     )
     st.plotly_chart(fig1, use_container_width=True)
@@ -101,7 +101,7 @@ try:
     st.download_button(
         "Download Time Data",
         data=result.to_csv().encode("utf-8"),
-        file_name="Fields_Over_Time.csv",
+        file_name="Tools_Over_Time.csv",
         mime="text/csv",
     )
 except KeyError as e:
