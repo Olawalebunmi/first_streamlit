@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 
 
 # Reading in data
-datahub = pd.read_csv("newbies.csv.csv", encoding ="utf-8")
+datahub = pd.read_csv("newbies.csv", encoding ="utf-8")
 st.set_page_config("layout = wide")
 st.markdown('<style>div.block-container{padding-top:1rem;}</style>', unsafe_allow_html=True)
 image = Image.open('Data Analyst.png')
