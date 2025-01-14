@@ -55,13 +55,13 @@ with col2:
         st.error(f"Missing required columns for chart: {e}")
 
 # View and download grouped data
-st.markdown("### Industry and Tools")
+st.markdown("### Tools and Experience")
 _, view1, dwn1 = st.columns([0.15, 0.7, 0.15])
 
 with view1:
     expander = st.expander("View grouped data")
     try:
-        grouped_data = datahub.groupby("Tools")["industry"].sum()
+        grouped_data = datahub.groupby("tools")["industry"].sum()
         expander.write(grouped_data)
     except KeyError as e:
         st.error(f"Missing required columns for grouping: {e}")
