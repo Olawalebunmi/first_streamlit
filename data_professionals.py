@@ -86,7 +86,7 @@ with col3:
             x="experience",
             y="tools",
             labels={"experience": "experience"},
-            title="Tools used and Experience of Analysts",
+            title="Tools used and Years of Experience",
             hover_data=["experience"],
             template="plotly_white",
             height=500,
