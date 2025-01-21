@@ -15,7 +15,7 @@ st.markdown('<style>div.block-container{padding-top:1rem;}</style>', unsafe_allo
 
 col1, col2 = st.columns([0.1, 0.9])
 with col1:
-    st.image(image, width=100)
+    #st.image(image, width=100)
 
 html_title = """
 <style>
