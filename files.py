@@ -10,7 +10,7 @@ warnings.filterwarnings("ignore")
 # Page configuration
 st.set_page_config(
     page_title="Datahub Newbies Survey",
-    page_icon=":bar_chart: Data Analyst Dashboard",
+    page_icon=":bar_chart:",
     layout="wide"
 )
 
@@ -19,7 +19,7 @@ st.sidebar.header("Choose your Filter:")
 
 # Load dataset
 try:
-    datahub = pd.read_csv("newbies_numeric.csv")
+    datahub = pd.read_csv("newbies.csv")
 except FileNotFoundError:
     st.error("The file 'newbies.csv' was not found. Please upload the file.")
     st.stop()
@@ -94,8 +94,8 @@ except KeyError as e:
     fig2 = None
     st.error(f"Missing columns for 'Tools and Experience' chart: {e}")
 
-# Chart Pair 1: Display side by side
-st.markdown("### Chart Pair 1")
+# Display Chart Pair 1
+st.markdown("### Industry and Tools vs Tools and Experience")
 col1, col2 = st.columns(2)
 with col1:
     st.plotly_chart(fig1, use_container_width=True)
@@ -137,8 +137,8 @@ except KeyError as e:
     fig4 = None
     st.error(f"Missing columns for 'Experience Distribution' treemap: {e}")
 
-# Chart Pair 2: Display side by side
-st.markdown("### Chart Pair 2")
+# Display Chart Pair 2
+st.markdown("### Proportion of Experience Levels and Experience Distribution")
 col3, col4 = st.columns(2)
 with col3:
     st.plotly_chart(fig3, use_container_width=True)
@@ -171,42 +171,28 @@ except KeyError as e:
     fig6 = None
     st.error(f"Missing column for 'Satisfaction by Industry' pie chart: {e}")
 
-# Chart Pair 3: Display side by side
-st.markdown("### Chart Pair 3")
+# Display Chart Pair 3
+st.markdown("### Motivation and Satisfaction by Industry")
 col5, col6 = st.columns(2)
 with col5:
     st.plotly_chart(fig5, use_container_width=True)
 with col6:
     st.plotly_chart(fig6, use_container_width=True)
 
-# Scatter Plot: Motivation vs Satisfaction
-st.markdown("### Scatter Plot: Motivation vs Satisfaction")
-try:
-    scatter_fig = px.scatter(
-        datahub,
-        x="satisfaction_numeric",
-        y="motivation_numeric",
-        title="Relationship Between Motivation and Satisfaction",
-        labels={"satisfaction_numeric": "Satisfaction", "motivation_numeric": "Motivation"}
-    )
-    st.plotly_chart(scatter_fig, use_container_width=True)
-except KeyError as e:
-    st.error(f"Missing columns for scatter plot: {e}")
-
 # Data view and download
 st.markdown("### View and Download Data")
 with st.expander("View Data"):
     try:
-        st.write(datahub.style.background_gradient(cmap="Blues"))
+        st.write(filtered_data)
     except Exception as e:
         st.error(f"Error displaying data: {e}")
 
     try:
-        csv = datahub.to_csv(index=False).encode("utf-8")
+        csv = filtered_data.to_csv(index=False).encode("utf-8")
         st.download_button(
-            label="Download Full Dataset",
+            label="Download Filtered Dataset",
             data=csv,
-            file_name="newbies_data.csv",
+            file_name="filtered_data.csv",
             mime="text/csv"
         )
     except Exception as e:
