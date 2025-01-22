@@ -10,7 +10,7 @@ warnings.filterwarnings("ignore")
 # Page configuration
 st.set_page_config(
     page_title="Datahub Newbies Survey",
-    page_icon=":bar_chart:",
+    page_icon=":bar_chart: Data Analyst Dashboard",
     layout="wide"
 )
 
@@ -19,7 +19,7 @@ st.sidebar.header("Choose your Filter:")
 
 # Load dataset
 try:
-    datahub = pd.read_csv("newbies.csv")
+    datahub = pd.read_csv("newbies_numeric.csv")
 except FileNotFoundError:
     st.error("The file 'newbies.csv' was not found. Please upload the file.")
     st.stop()
