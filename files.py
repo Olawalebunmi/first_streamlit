@@ -17,6 +17,16 @@ st.set_page_config(
 # Sidebar filters
 st.sidebar.header("Choose your Filter:")
 
+# Adjust header font size using CSS
+st.markdown("""
+    <style>
+        .css-18e3th9 {
+            font-size: 32px !important;
+            font-weight: bold;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # Load dataset
 try:
     datahub = pd.read_csv("newbies_numeric.csv")
