@@ -12,7 +12,7 @@ st.set_page_config(page_title="Datahub Newbies Survey", page_icon=":bar_chart:",
 st.title (":bar_chart: Data Analyst Dashboard")
 st.markdown('<style>div.block-container{padding-top:1rem;}<\style>', unsafe_allow_html=True)
 
-datahub = "newbies.csv"
+datahub = pd.read_csv("newbies.csv")
 
 col1, col2, col3 = st.columns((0.3, 0.7, 0.7))
 with col1:
