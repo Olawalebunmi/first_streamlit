@@ -211,3 +211,23 @@ try:
     st.plotly_chart(scatter_fig, use_container_width=True)
 except KeyError as e:
     st.error(f"Missing columns for scatter plot: {e}")
+
+# Data view and download
+st.markdown("### View and Download Data")
+with st.expander("View Data"):
+    try:
+        st.write(datahub.style.background_gradient(cmap="Blues"))
+    except Exception as e:
+        st.error(f"Error displaying data: {e}")
+
+    try:
+        csv = datahub.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="Download Full Dataset",
+            data=csv,
+            file_name="newbies_data.csv",
+            mime="text/csv"
+        )
+    except Exception as e:
+        st.error(f"Error preparing data for download: {e}")
+
