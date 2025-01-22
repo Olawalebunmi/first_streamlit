@@ -39,8 +39,8 @@ with col2:
     try:
         fig1= px.bar(
             datahub,
-            x="Industry",
-            y="Tools",
+            x="industry",
+            y="tools",
             labels={"industry": "industry"},
             title="Industry and Tools used by Analysts",
             hover_data=["industry"],
