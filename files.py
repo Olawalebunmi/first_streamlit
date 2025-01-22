@@ -19,9 +19,9 @@ st.sidebar.header("Choose your Filter:")
 
 # Load dataset
 try:
-    datahub = pd.read_csv("newbies.csv")
+    datahub = pd.read_csv("newbies_numeric.csv")
 except FileNotFoundError:
-    st.error("The file 'newbies.csv' was not found. Please upload the file.")
+    st.error("The file 'newbies_numeric.csv' was not found. Please upload the file.")
     st.stop()
 
 # Sidebar filters
