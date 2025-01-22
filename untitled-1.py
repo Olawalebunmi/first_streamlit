@@ -6,7 +6,7 @@ import os
 import warnings
 warnings.filterwarnings('ignore')
 
-st.write("Hello")
+st.write("Hello, how are you?")
 
 
 st.set_page_config(page_title="Datahub Newbies Survey", page_icon=":bar_chart:", layout="wide")
