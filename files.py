@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.figure_factory as ff
 import warnings
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 
 # Page configuration
 st.set_page_config(
@@ -14,45 +14,35 @@ st.set_page_config(
     layout="wide"
 )
 
-# Title and header setup
-st.title(":bar_chart: Data Analyst Dashboard")
-st.markdown(
-    '<style>div.block-container{padding-top:1rem;}</style>',
-    unsafe_allow_html=True
-)
+# Sidebar filters
+st.sidebar.header("Choose your Filter:")
 
 # Load dataset
 try:
-    datahub = pd.read_csv("newbies_numeric.csv")
+    datahub = pd.read_csv("newbies.csv")
 except FileNotFoundError:
     st.error("The file 'newbies.csv' was not found. Please upload the file.")
     st.stop()
 
 # Sidebar filters
-st.sidebar.header("Choose your Filter:")
-
-# Filter for Tools
 tools = st.sidebar.multiselect(
     "Pick your Tools:",
     options=datahub["tools"].unique() if "tools" in datahub.columns else [],
     default=[]
 )
 
-# Filter for Education
 education = st.sidebar.multiselect(
     "Choose your Education Level:",
     options=datahub["education"].unique() if "education" in datahub.columns else [],
     default=[]
 )
 
-# Filter for Satisfaction
 satisfaction = st.sidebar.multiselect(
     "Choose Satisfaction Level:",
     options=datahub["satisfaction"].unique() if "satisfaction" in datahub.columns else [],
     default=[]
 )
 
-# Filter for Industry
 industry = st.sidebar.multiselect(
     "Choose your Industry:",
     options=datahub["industry"].unique() if "industry" in datahub.columns else [],
@@ -70,135 +60,141 @@ if satisfaction:
 if industry:
     filtered_data = filtered_data[filtered_data["industry"].isin(industry)]
 
-# Display last updated time
-col1, col2, col3 = st.columns((0.3, 0.7, 0.7))
-with col1:
-    box_date = datetime.datetime.now().strftime("%d %B %Y")
-    st.write(f"Last updated by:\n{box_date}")
+# Display last updated time near the sidebar
+st.sidebar.markdown("#### Last Updated:")
+st.sidebar.write(datetime.datetime.now().strftime("%d %B %Y"))
 
-# Bar chart for Industry and Tools
-with col2:
-    try:
-        fig1 = px.bar(
-            datahub,
-            x="industry",
-            y="tools",
-            title="Industry and Tools used by Analysts",
-            hover_data=["industry"],
-            template="seaborn",
-            height=400,
-            text_auto=True
-        )
-        st.plotly_chart(fig1, use_container_width=True)
-    except KeyError as e:
-        st.error(f"Missing required columns for chart: {e}")
-
-# Grouped data: Tools and Industry
-st.markdown("### Tools and Industry")
-_, view1, dwn1 = st.columns([0.15, 0.7, 0.15])
-with view1:
-    expander = st.expander("View grouped data")
-    try:
-        grouped_data = datahub.groupby("tools")["industry"].count()
-        expander.write(grouped_data)
-    except KeyError as e:
-        st.error(f"Missing required columns for grouping: {e}")
-
-with dwn1:
-    try:
-        csv_data = grouped_data.to_csv().encode("utf-8")
-        st.download_button(
-            label="Download Data",
-            data=csv_data,
-            file_name="Tools_and_Industry.csv",
-            mime="text/csv",
-            help="Click here to download the data as a CSV file"
-        )
-    except NameError:
-        st.error("Data not available for download.")
-
-# Pie chart for Experience levels
-col4, col5 = st.columns((0.7, 0.7))
-with col4:
-    st.subheader("Proportion of Experience Levels")
-    try:
-        experience_counts = datahub["experience"].value_counts().reset_index()
-        experience_counts.columns = ["experience", "count"]
-        fig3 = px.pie(
-            experience_counts,
-            values="count",
-            names="experience",
-            hole=0.5
-        )
-        st.plotly_chart(fig3, use_container_width=True)
-    except KeyError as e:
-        st.error(f"Missing required column for pie chart: {e}")
-
-# Treemap: Experience Distribution Across Industries
-st.subheader("Experience Distribution Across Industries")
+# Chart 1: Industry and Tools
 try:
-    experience_counts = (
+    fig1 = px.bar(
+        datahub,
+        x="industry",
+        y="tools",
+        title="Industry and Tools used by Analysts",
+        hover_data=["industry"],
+        template="seaborn",
+        text_auto=True
+    )
+except KeyError as e:
+    fig1 = None
+    st.error(f"Missing columns for 'Industry and Tools' chart: {e}")
+
+# Chart 2: Tools and Experience
+try:
+    fig2 = px.bar(
+        datahub,
+        x="experience",
+        y="tools",
+        title="Tools used and Years of Experience",
+        hover_data=["experience"],
+        template="seaborn",
+        text_auto=True
+    )
+except KeyError as e:
+    fig2 = None
+    st.error(f"Missing columns for 'Tools and Experience' chart: {e}")
+
+# Chart Pair 1: Display side by side
+st.markdown("### Chart Pair 1")
+col1, col2 = st.columns(2)
+with col1:
+    st.plotly_chart(fig1, use_container_width=True)
+with col2:
+    st.plotly_chart(fig2, use_container_width=True)
+
+# Chart 3: Proportion of Experience Levels
+try:
+    experience_counts = datahub["experience"].value_counts().reset_index()
+    experience_counts.columns = ["experience", "count"]
+    fig3 = px.pie(
+        experience_counts,
+        values="count",
+        names="experience",
+        title="Proportion of Experience Levels",
+        hole=0.5
+    )
+except KeyError as e:
+    fig3 = None
+    st.error(f"Missing column for 'Experience Levels' pie chart: {e}")
+
+# Chart 4: Experience Distribution Across Industries
+try:
+    experience_dist = (
         datahub.groupby(["motivation", "satisfaction", "industry", "experience"])
         .size()
         .reset_index(name="count")
     )
     fig4 = px.treemap(
-        experience_counts,
+        experience_dist,
         path=["motivation", "satisfaction", "industry", "experience"],
         values="count",
+        title="Experience Distribution Across Industries",
         template="seaborn",
         color="experience",
-        color_continuous_scale="Viridis",
-        height=650
+        color_continuous_scale="Viridis"
     )
-    st.plotly_chart(fig4, use_container_width=True)
 except KeyError as e:
-    st.error(f"Missing required columns for treemap: {e}")
+    fig4 = None
+    st.error(f"Missing columns for 'Experience Distribution' treemap: {e}")
 
-# Pie charts for Motivation and Satisfaction
-chart1, chart2 = st.columns((2, 2))
-with chart1:
-    st.subheader("Motivation by Industry")
-    try:
-        fig5 = px.pie(
-            experience_counts,
-            values="count",
-            names="motivation",
-            template="plotly_dark"
-        )
-        st.plotly_chart(fig5, use_container_width=True)
-    except KeyError as e:
-        st.error(f"Missing required column for motivation pie chart: {e}")
+# Chart Pair 2: Display side by side
+st.markdown("### Chart Pair 2")
+col3, col4 = st.columns(2)
+with col3:
+    st.plotly_chart(fig3, use_container_width=True)
+with col4:
+    st.plotly_chart(fig4, use_container_width=True)
 
-with chart2:
-    st.subheader("Satisfaction by Industry")
-    try:
-        fig6 = px.pie(
-            experience_counts,
-            values="count",
-            names="satisfaction",
-            template="plotly_dark"
-        )
-        st.plotly_chart(fig6, use_container_width=True)
-    except KeyError as e:
-        st.error(f"Missing required column for satisfaction pie chart: {e}")
+# Chart 5: Motivation by Industry
+try:
+    fig5 = px.pie(
+        experience_dist,
+        values="count",
+        names="motivation",
+        title="Motivation by Industry",
+        template="plotly_dark"
+    )
+except KeyError as e:
+    fig5 = None
+    st.error(f"Missing column for 'Motivation by Industry' pie chart: {e}")
 
-# Scatter plot for Motivation vs Satisfaction
-st.subheader("Relationship Between Motivation and Satisfaction")
+# Chart 6: Satisfaction by Industry
+try:
+    fig6 = px.pie(
+        experience_dist,
+        values="count",
+        names="satisfaction",
+        title="Satisfaction by Industry",
+        template="plotly_dark"
+    )
+except KeyError as e:
+    fig6 = None
+    st.error(f"Missing column for 'Satisfaction by Industry' pie chart: {e}")
+
+# Chart Pair 3: Display side by side
+st.markdown("### Chart Pair 3")
+col5, col6 = st.columns(2)
+with col5:
+    st.plotly_chart(fig5, use_container_width=True)
+with col6:
+    st.plotly_chart(fig6, use_container_width=True)
+
+# Scatter Plot: Motivation vs Satisfaction
+st.markdown("### Scatter Plot: Motivation vs Satisfaction")
 try:
     scatter_fig = px.scatter(
         datahub,
         x="satisfaction_numeric",
         y="motivation_numeric",
-        title="Motivation vs Satisfaction",
-        labels={"satisfaction_numeric": "Satisfaction", "motivation_numeric": "Motivation"},
+        title="Relationship Between Motivation and Satisfaction",
+        labels={"satisfaction_numeric": "Satisfaction", "motivation_numeric": "Motivation"}
     )
     st.plotly_chart(scatter_fig, use_container_width=True)
 except KeyError as e:
-    st.error(f"Missing required columns for scatter plot: {e}")
+    st.error(f"Missing columns for scatter plot: {e}")
 
 # Data view and download
-st.subheader("View and Download Data")
+st.markdown("### View and Download Data")
 with st.expander("View Data"):
     try:
         st.write(datahub.style.background_gradient(cmap="Blues"))
