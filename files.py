@@ -197,3 +197,17 @@ with st.expander("View Data"):
         )
     except Exception as e:
         st.error(f"Error preparing data for download: {e}")
+
+# Scatter Plot: Motivation vs Satisfaction
+st.markdown("### Scatter Plot: Motivation vs Satisfaction")
+try:
+    scatter_fig = px.scatter(
+        datahub,
+        x="satisfaction_numeric",
+        y="motivation_numeric",
+        title="Relationship Between Motivation and Satisfaction",
+        labels={"satisfaction_numeric": "Satisfaction", "motivation_numeric": "Motivation"}
+    )
+    st.plotly_chart(scatter_fig, use_container_width=True)
+except KeyError as e:
+    st.error(f"Missing columns for scatter plot: {e}")
