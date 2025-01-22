@@ -2,13 +2,14 @@ import streamlit as st
 import pandas as pd
 import datetime
 import plotly.express as px
-import os
+import plotly.figure_factory as ff
 import warnings
 
-warnings.filterwarnings('ignore')
+# Suppress warnings
+warnings.filterwarnings("ignore")
 
+# Streamlit Page Configuration
 st.set_page_config(page_title="Datahub Newbies Survey", page_icon=":bar_chart:", layout="wide")
-st.title (":bar_chart: Data Analyst Dashboard")
 
 # Adjust header font size using CSS
 st.markdown("""
@@ -20,173 +21,146 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<style>div.block-container{padding-top:1rem;}<\style>', unsafe_allow_html=True)
-datahub = "newbies_newbies.csv"
+st.markdown('<style>div.block-container{padding-top:1rem;}</style>', unsafe_allow_html=True)
+
+# Load the dataset
+try:
+    datahub = pd.read_csv("newbies_numeric.csv")
+except FileNotFoundError:
+    st.error("The file 'newbies_newbies.csv' was not found. Please upload the correct file.")
+    st.stop()
+
+# Display last update time
 col1, col2, col3 = st.columns((0.3, 0.7, 0.7))
 with col1:
-    box_date = str(datetime.datetime.now().strftime("%d %B %Y"))
-    st.write(f"Last updated by: \n {box_date}")
-#creating filter
-# Create for tools
-st.sidebar.header("Choose your Filter: ")
-tools = st.sidebar.multiselect("Pick your Tools", datahub["tools"].unique())
-#create for education
-st.sidebar.header("choose your filter: ")
-education = st.sidebar.multiselect("Choose your Education Level", datahub["education"].unique())
-#create for satisfaction
-satisfaction = ("Choose Satisfaction Level", datahub["satisfaction"].unique())
-#create for sindustry
-industry = ("Choose your Industry", datahub["industry"].unique())
-# Industry andTools
+    box_date = datetime.datetime.now().strftime("%d %B %Y")
+    st.write(f"Last updated by: \n{box_date}")
+
+# Sidebar Filters
+st.sidebar.header("Choose your Filter:")
+tools = st.sidebar.multiselect("Pick your Tools:", datahub["tools"].unique())
+education = st.sidebar.multiselect("Choose your Education Level:", datahub["education"].unique())
+satisfaction = st.sidebar.multiselect("Choose Satisfaction Level:", datahub["satisfaction"].unique())
+industry = st.sidebar.multiselect("Choose your Industry:", datahub["industry"].unique())
+
+# Apply filters
+filtered_data = datahub.copy()
+if tools:
+    filtered_data = filtered_data[filtered_data["tools"].isin(tools)]
+if education:
+    filtered_data = filtered_data[filtered_data["education"].isin(education)]
+if satisfaction:
+    filtered_data = filtered_data[filtered_data["satisfaction"].isin(satisfaction)]
+if industry:
+    filtered_data = filtered_data[filtered_data["industry"].isin(industry)]
+
+# Visualization: Industry and Tools
 with col2:
-    try:
-        fig1= px.bar(
-            datahub,
-            x="Industry",
-            y="Tools",
-            labels={"industry": "industry"},
+    if not filtered_data.empty:
+        fig1 = px.bar(
+            filtered_data,
+            x="industry",
+            y="tools",
             title="Industry and Tools used by Analysts",
             hover_data=["industry"],
             template="seaborn",
             height=400,
-             text_auto=True
+            text_auto=True
         )
         st.plotly_chart(fig1, use_container_width=True)
-    except KeyError as e:
-        st.error(f"Missing required columns for chart: {e}")
-# View and download grouped data
-st.markdown("### Tools and Industry")
-_, view1, dwn1 = st.columns([0.15, 0.7, 0.15])
-with view1:
-    expander = st.expander("View grouped data")
-    try:
-        grouped_data = datahub.groupby("tools")["industry"].sum()
-        expander.write(grouped_data)
-    except KeyError as e:
-        st.error(f"Missing required columns for grouping: {e}")
-with dwn1:
-    try:
-        csv_data = grouped_data.to_csv().encode("utf-8")
-        st.download_button(
-            "Download Data",
-            data=csv_data,
-            file_name="Tools_and_Industry.csv",
-            mime="text/csv",
-            help = "Click here to download the data as a csv file"
-        )
-    except NameError:
-        st.error("Data not available for download.")
-# Tools and Experience
+    else:
+        st.warning("No data available for the selected filters.")
+
+# Visualization: Tools and Experience
 with col3:
-    try:
+    if not filtered_data.empty:
         fig2 = px.bar(
-            datahub,
+            filtered_data,
             x="experience",
             y="tools",
-            labels={"experience": "experience"},
             title="Tools used and Years of Experience",
             hover_data=["experience"],
             template="seaborn",
             height=500,
-             text_auto=True
+            text_auto=True
         )
         st.plotly_chart(fig2, use_container_width=True)
-    except KeyError as e:
-        st.error(f"Missing required columns for chart: {e}")
-# View and download grouped data
-st.markdown("### Tools and Experience")
-_, view2, dwn2 = st.columns([0.15, 0.7, 0.15])
-with view2:
-    expander = st.expander("View grouped data")
-    try:
-        grouped_data = datahub.groupby("tools")["experience"].sum()
-        expander.write(grouped_data)
-    except KeyError as e:
-        st.error(f"Missing required columns for grouping: {e}")
-with dwn2:
-    try:
-        csv_data = grouped_data.to_csv().encode("utf-8")
-        st.download_button(
-            "Download Data",
-            data=csv_data,
-            file_name="Tools_and_Experience.csv",
-            mime="text/csv",
-            help = "Click here to download the data as a csv file"
-        )
-    except NameError:
-        st.error("Data not available for download.")
-# Divider
-#st.divider()
+    else:
+        st.warning("No data available for the selected filters.")
+
+# Pie Chart: Proportion of Experience Levels
 col4, col5 = st.columns((0.7, 0.7))
 with col4:
     st.subheader("Proportion of Experience Levels")
-# Group data by Experience and count entries
-experience_counts = datahub["experience"].value_counts().reset_index()
-experience_counts.columns = ["experience", "count"]
-#create a pie chart
-fig3 = px.pie(
-    experience_counts,
-    values = "count",
-    names = "experience",
-    hole = 0.5
-)
- # Update trace for better label placement
-fig3.update_traces(text = datahub["experience"], textposition = "outside")
-# Display the pie chart in Streamlit
-st_plotly_chart(fig3,use_container_width=True)
-cl4, cl5 = st.columns(2)
-with cl4:
-    with st.expander("Category_ViewData"):
-         # Display data with background gradient
-        st.write(datahub.style.background_gradient(cmap="Blues"))
-        # Convert data to CSV for download
-        csv = datahub.to_csv(index = False).encode('utf-8')
-        st.download_button(
-            label = "Download Data", data = csv, file_name="Category by Experience.csv", mime = "text/csv",
-                           help = "Click here to download the data as csv file")
-# Create a treemap
+    if not filtered_data.empty:
+        experience_counts = filtered_data["experience"].value_counts().reset_index()
+        experience_counts.columns = ["experience", "count"]
+        fig3 = px.pie(
+            experience_counts,
+            values="count",
+            names="experience",
+            hole=0.5,
+            title="Experience Levels Distribution",
+        )
+        st.plotly_chart(fig3, use_container_width=True)
+    else:
+        st.warning("No data available for the selected filters.")
+
+# Treemap: Experience Distribution Across Industries
 st.subheader("Experience Distribution Across Industries")
-# Count occurrences of each combination of industry and experience
-experience_counts = datahub.groupby(["motivation", "satisfaction","industry", "experience"]).size().reset_index(name="count"),
-fig4 = px.treemap(
-    experience_counts,
-    path = ["motivation", "satisfaction", "industry", "experience"],
-    values = "count",
-    template ="seaborn",
-    color="experience",
-    color_continous_scale="Viridis",
-    height = 650
-)
-st.plotly_chart(fig4, use_container_width=True)
-chart1, chart2 = st.columns((2))
-with chart1:
-    st.subheader("Motiivation of industry")
-    fig = px.pie(experience_counts, values = "count", names = "motivation", template = "plotly_dark")
-    fig.update_traces(text = experience_counts['Segment'], textposition = "inside")
-    st.plotly_chart(fig,use_container_width=True)
-with chart2:
-    st.subheader("Satisfaction of industry")
-    fig = px.pie(experience_counts, values = "count", names = "Satisfaction", template = "plotly_dark")
-    fig.update_traces(text = experience_counts['Satisfaction'], textposition = "inside")
-    st.plotly_chart(fig,use_container_width=True)
-import plotly.figure_factory as ff
-st.subheader(":point_right: Motivation level by Industry Summary")
+if not filtered_data.empty:
+    grouped_data = (
+        filtered_data.groupby(["motivation", "satisfaction", "industry", "experience"])
+        .size()
+        .reset_index(name="count")
+    )
+    fig4 = px.treemap(
+        grouped_data,
+        path=["motivation", "satisfaction", "industry", "experience"],
+        values="count",
+        color="experience",
+        color_continuous_scale="Viridis",
+        height=650,
+        title="Treemap of Experience Distribution",
+    )
+    st.plotly_chart(fig4, use_container_width=True)
+else:
+    st.warning("No data available for the selected filters.")
+
+# Summary Table: Motivation Level by Industry
+st.subheader(":point_right: Motivation Level by Industry Summary")
 with st.expander("Summary Table"):
-    datahub_sample = datahub[0:5][["motivation", "satisfaction", "industry", "experience", "job_ease"]]
-    fig = ff.create_table(datahub_sample, coloorscale = "cividis")
-    st.plotly_chart(fig, use_container_width=True)
-    st.markdown("Satisfaction level by Industry Table")
-    experience_counts["Satisfaction"] = experience_counts["Satisfaction"]
-    industry = pd.pivot_table(data=experience_counts, values= "satisfaction", index = ["Motivation"], columns= "satisfaction")
-    st.write(industry.style.background_gradient(cmap="Blues"))
-# Create scatter plot
-data1 = px.scatter(datahub, x = "satisfaction_numeric", y = "motivation_nnumeric")
-data1['layout'].update(title="Relationship between Motivation and Satisfaction using scatter plot",
-                       titlefont = dict(size=20),xaxis=dict(title="Satisfaction", titlefont=dict(size=19)),
-                       yaxis=dict(title="Motivation", titlefont=dict(size=19)))
-st.plotly_chart(data1,use_container_width=True)
-with st.expander("View Data"):
-    st.write(experience_counts.iloc[:50,1:20,2].style.background_graddient(cmap="Oranges"))
-#Download original dataset
-csv = datahub.to_csv(index = False).encoode('utf-8')
-st.download_button('Download Data', data = csv, file_name = "Data.csv", mime = "text/csv")
+    if not filtered_data.empty:
+        datahub_sample = filtered_data[
+            ["motivation", "satisfaction", "industry", "experience", "job_ease"]
+        ].head(5)
+        fig5 = ff.create_table(datahub_sample, colorscale="cividis")
+        st.plotly_chart(fig5, use_container_width=True)
+    else:
+        st.warning("No data available for the selected filters.")
+
+# Scatter Plot: Relationship between Motivation and Satisfaction
+st.subheader("Relationship between Motivation and Satisfaction")
+if not filtered_data.empty:
+    if "satisfaction_numeric" in filtered_data.columns and "motivation_numeric" in filtered_data.columns:
+        fig6 = px.scatter(
+            filtered_data,
+            x="satisfaction_numeric",
+            y="motivation_numeric",
+            title="Motivation vs Satisfaction",
+        )
+        st.plotly_chart(fig6, use_container_width=True)
+    else:
+        st.warning("The columns 'satisfaction_numeric' and 'motivation_numeric' are missing.")
+else:
+    st.warning("No data available for the selected filters.")
+
+# Download Filtered Data
+csv = filtered_data.to_csv(index=False).encode("utf-8")
+st.download_button(
+    "Download Filtered Data",
+    data=csv,
+    file_name="Filtered_Data.csv",
+    mime="text/csv",
+    help="Download the filtered data as a CSV file.",
+)
