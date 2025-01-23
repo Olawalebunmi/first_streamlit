@@ -21,7 +21,7 @@ except Exception as e:
     st.error(f"An error occurred while reading the CSV file: {e}")
     st.stop()
 
-st.header("Filters")
+st.header("Data Analyst Survey")
 html_title = """
 <style>
     .title-test {
@@ -58,6 +58,21 @@ if tools:
 else:
     st.write("Showing all data:")
     st.write(datahub)
+
+##############################################
+# Sidebar multiselect with proper options
+st.sidebar.header("Filter Options")
+tools = st.sidebar.multiselect(
+    "Pick your Education Level",  # Label for the widget
+    options=datahub['education'].tolist(),  # Convert the 'Tools' column to a list
+    default=None  # No default selection
+)
+
+# Display the selected tools
+if tools:
+    st.write("You selected:", "education")
+else:
+    st.write("No education selected yet!")
 
 col2 = st.columns([0.9])
 
