@@ -79,18 +79,18 @@ with dwn1:
             mime="text/csv",
             help = "Click here to download the data as a csv file"
         )
-        
+
 ##############################################
 # Sidebar multiselect with proper options
-st.sidebar.header("Filter Options")
-tools = st.sidebar.multiselect(
+
+education = st.sidebar.multiselect(
     "Pick your Education Level",  # Label for the widget
     options=datahub['education'].tolist(),  # Convert the 'Tools' column to a list
     default=None  # No default selection
 )
 
 # Display the selected tools
-if tools:
+if education:
     st.write("You selected:", "education")
 else:
     st.write("No education selected yet!")
@@ -126,11 +126,11 @@ with col4:
     try:
         fig2 = px.bar(
             filtered_data,
-            x="Current Role",
-            y="Field",
-            labels={"Field": "Field", "Current Role": "Current Role"},
-            title="Role and Field of Analyst",
-            hover_data=["Field"],
+            x="education",
+            y="tools",
+            labels={"tools": "tools", "education": "education"},
+            title="Tools and Education",
+            hover_data=["tools"],
             template="plotly",
             height=500
         )
