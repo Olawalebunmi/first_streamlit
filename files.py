@@ -74,7 +74,7 @@ st.sidebar.write(datetime.datetime.now().strftime("%d %B %Y"))
 # Chart 1: Industry and Tools
 try:
     fig1 = px.bar(
-        datahub,
+        filtered_data,
         x="industry",
         y="tools",
         title="Industry and Tools used by Analysts",
@@ -89,7 +89,7 @@ except KeyError as e:
 # Chart 2: Tools and Experience
 try:
     fig2 = px.bar(
-        datahub,
+        filtered_data,
         x="experience",
         y="tools",
         title="Tools used and Years of Experience",
