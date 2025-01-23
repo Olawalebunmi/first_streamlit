@@ -66,6 +66,9 @@ if satisfaction:
     filtered_data = filtered_data[filtered_data["satisfaction"].isin(satisfaction)]
 if industry:
     filtered_data = filtered_data[filtered_data["industry"].isin(industry)]
+
+# Display filtered data
+st.write("Filtered Data:", filtered_data)
     
 # Display last updated time near the sidebar
 st.sidebar.markdown("#### Last Updated:")
