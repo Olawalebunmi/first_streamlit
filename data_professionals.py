@@ -37,25 +37,28 @@ st.markdown(html_title, unsafe_allow_html=True)
 # Sidebar filters
 st.sidebar.header("Choose your Filter: ")
 
-# Tools filter
-tools = st.sidebar.multiselect("Pick your Tools", datahub["Tools"].unique(), default=datahub["Tools"].unique())
+# Sidebar multiselect with proper options
+st.sidebar.header("Filter Options")
+tools = st.sidebar.multiselect(
+    "Pick your Tools",  # Label for the widget
+    options=datahub['Tools'].tolist(),  # Convert the 'Tools' column to a list
+    default=None  # No default selection
+)
 
-# Education filter
-education = st.sidebar.multiselect("Choose your Education Level", datahub["Education"].unique(), default=datahub["Education"].unique())
+# Display the selected tools
+if tools:
+    st.write("You selected:", tools)
+else:
+    st.write("No tools selected yet!")
 
-# Satisfaction filter
-satisfaction = st.sidebar.multiselect("Choose Satisfaction Level", datahub["Satisfaction"].unique(), default=datahub["Satisfaction"].unique())
-
-# Industry filter
-industry = st.sidebar.multiselect("Choose your Industry", datahub["Industry"].unique(), default=datahub["Industry"].unique())
-
-# Apply filters
-filtered_datahub = datahub[
-    (datahub["Tools"].isin(tools)) &
-    (datahub["Education"].isin(education)) &
-    (datahub["Satisfaction"].isin(satisfaction)) &
-    (datahub["Industry"].isin(industry))
-]
+# Filter the DataFrame based on selected tools (if necessary)
+if tools:
+    filtered_data = datahub[datahub['Tools'].isin(tools)]
+    st.write("Filtered Data:")
+    st.write(filtered_data)
+else:
+    st.write("Showing all data:")
+    st.write(datahub)
 
 col2 = st.columns([0.9])
 
@@ -63,7 +66,7 @@ col2 = st.columns([0.9])
 with col2[0]:
     try:
         fig1 = px.bar(
-            filtered_datahub,
+            filtered_data,
             x="Industry",
             y="Tools",
             labels={"Industry": "Industry", "Tools": "Tools"},
@@ -87,7 +90,7 @@ with col3:
 with col4:
     try:
         fig2 = px.bar(
-            filtered_datahub,
+            filtered_data,
             x="Current Role",
             y="Field",
             labels={"Field": "Field", "Current Role": "Current Role"},
