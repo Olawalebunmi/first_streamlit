@@ -36,6 +36,7 @@ except FileNotFoundError:
     st.error("The file 'newbies_numeric.csv' was not found. Please upload the file.")
     st.stop()
 
+# Sidebar filters & widget
 # Sidebar filters
 tools = st.sidebar.multiselect(
     "Pick your Tools:",
@@ -71,7 +72,7 @@ if satisfaction:
     filtered_data = filtered_data[filtered_data["satisfaction"].isin(satisfaction)]
 if industry:
     filtered_data = filtered_data[filtered_data["industry"].isin(industry)]
-
+    
 # Display last updated time near the sidebar
 st.sidebar.markdown("#### Last Updated:")
 st.sidebar.write(datetime.datetime.now().strftime("%d %B %Y"))
