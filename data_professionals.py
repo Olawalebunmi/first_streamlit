@@ -3,16 +3,18 @@ import pandas as pd
 import datetime
 from PIL import Image
 import plotly.express as px
-import matplotlib.pyplot as plt
+
+
+import plotly.graph_objects as go
 
 
 # Page configuration
 st.set_page_config(page_title="Data Analyst Dashboard", layout="wide")
+st.markdown('<style>div.block-container{padding-top:1rem;}</style>', unsafe_allow_html=True)
 
 # Reading in data
 try:
     datahub = pd.read_csv("newbies.csv", encoding="utf-8")
-    #datahub["date"] = pd.to_datetime(datahub["date"])  # Ensure 'date' is in datetime format
 except FileNotFoundError:
     st.error("The file 'newbies.csv' was not found. Please ensure it is in the correct directory.")
     st.stop()  # Stop execution if the file is missing
@@ -20,15 +22,27 @@ except Exception as e:
     st.error(f"An error occurred while reading the CSV file: {e}")
     st.stop()
 
-# Customizing page style
-st.markdown('<style>div.block-container{padding-top:1rem;}</style>', unsafe_allow_html=True)
+st.header("Data Analyst Survey")
+html_title = """
+<style>
+    .title-test {
+    font-weight:bold;
+    padding: Spx;
+    border-radius:6px
+    }
+    </style>
+    <center><h1 class="title-test">Data Analyst Survey Dashboard</h1></center>"""
+st.markdown(html_title, unsafe_allow_html=True)
 
-# Displaying an Image
-try:
-    image = Image.open('Data Analyst.png')
-    st.image(image, width=100)
-except FileNotFoundError:
-    st.warning("Image file 'Data Analyst.png' not found. Skipping image display.")
+# Sidebar multiselect for filtering (with distinct options)
+st.sidebar.header("Filter Options")
+distinct_tools = datahub['tools'].unique()  # Get unique values from the 'Tool' column
+selected_tools = st.sidebar.multiselect(
+    "Select Tools to Display", 
+    options=distinct_tools,  # Populate with unique tool names
+    default=distinct_tools  # Default selection (all tools)
+)
+
 
 # Dashboard Title
 st.markdown("<center><h1>Data Analyst Survey Dashboard</h1></center>", unsafe_allow_html=True)
@@ -39,88 +53,34 @@ with col1:
     box_date = datetime.datetime.now().strftime("%d %B %Y")
     st.write(f"Last updated: **{box_date}**")
 
-# Role and Field Chart
-with col2:
-    try:
-        fig = px.bar(
-            datahub,
-            x="industry",
-            y="tools",
-            labels={"industry": "industry"},
-            title="Industry and Tools of Analysts",
-            hover_data=["industry"],
-            template="plotly_white",
-            height=500,
-        )
-        st.plotly_chart(fig, use_container_width=True)
-    except KeyError as e:
-        st.error(f"Missing required columns for chart: {e}")
 
-# View and download grouped data
-st.markdown("### Tools and Industry")
-_, view1, dwn1 = st.columns([0.15, 0.7, 0.15])
+# Display filtered data in the sidebar
+st.sidebar.subheader("Filtered Data")
+st.sidebar.dataframe("filtered_data")
 
-with view1:
-    expander = st.expander("View grouped data")
-    try:
-        grouped_data = datahub.groupby("tools")["industry"].sum()
-        expander.write(grouped_data)
-    except KeyError as e:
-        st.error(f"Missing required columns for grouping: {e}")
+# Filter data based on selection
+if selected_tools:
+    filtered_data = datahub[datahub['tools'].isin(selected_tools)]
+else:
+    filtered_data = datahub
+>>>>>>> 98f1b962dde908808a7d0f7bc6d9cb30da5924a9
 
-with dwn1:
-    try:
-        csv_data = grouped_data.to_csv().encode("utf-8")
-        st.download_button(
-            "Download Data",
-            data=csv_data,
-            file_name="Tools_and_Industry.csv",
-            mime="text/csv",
-        )
-    except NameError:
-        st.error("Data not available for download.")
+# Display filtered data as a table
+st.write("Filtered Data:")
+st.write(filtered_data)
 
-# Tools and Experience
-with col3:
-    try:
-        fig = px.bar(
-            datahub,
-            x="experience",
-            y="tools",
-            labels={"experience": "experience"},
-            title="Tools used and Years of Experience",
-            hover_data=["experience"],
-            template="plotly_white",
-            height=500,
-        )
-        st.plotly_chart(fig, use_container_width=True)
-    except KeyError as e:
-        st.error(f"Missing required columns for chart: {e}")
+# Plot a bar chart with the filtered data
+fig, ax = plt.subplots()
+usage_sums = filtered_data.groupby('Tool')['Usage'].sum()  # Aggregate usage by Tool
+ax.bar(usage_sums.index, usage_sums.values, color='skyblue')
+ax.set_xlabel("tools")
+ax.set_ylabel("Usage (%)")
+ax.set_title("Tool Usage by Professionals")
+ax.spines[['top', 'right']].set_visible(False)  # Remove top and right spines
 
-# View and download grouped data
-st.markdown("### Tools and Experience")
-_, view2, dwn2 = st.columns([0.15, 0.7, 0.15])
+# Add data labels
+for i, v in enumerate(usage_sums.values):
+    ax.text(i, v + 2, str(v), ha='center')
 
-with view2:
-    expander = st.expander("View grouped data")
-    try:
-        grouped_data = datahub.groupby("tools")["experience"].sum()
-        expander.write(grouped_data)
-    except KeyError as e:
-        st.error(f"Missing required columns for grouping: {e}")
-
-with dwn2:
-    try:
-        csv_data = grouped_data.to_csv().encode("utf-8")
-        st.download_button(
-            "Download Data",
-            data=csv_data,
-            file_name="Tools_and_Experience.csv",
-            mime="text/csv",
-        )
-    except NameError:
-        st.error("Data not available for download.")
-# Divider
-st.divider()
-
-
+# Display the chart
+st.pyplot(fig)
