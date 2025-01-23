@@ -35,14 +35,33 @@ except FileNotFoundError:
     st.error("The file 'newbies_numeric.csv' was not found. Please upload the file.")
     st.stop()
 
-# Start filter here
-st.title("Filters")
+# Sidebar filters & widget
+tools = st.sidebar.multiselect(
+    "Pick your Tools:",
+    options=datahub["tools"].unique() 
+)
 
+education = st.sidebar.multiselect(
+    "Choose your Education Level:",
+    options=datahub["education"].unique()    
+)
+
+satisfaction = st.sidebar.multiselect(
+    "Choose Satisfaction Level:",
+    options=datahub["satisfaction"].unique()
+)
+
+industry = st.sidebar.multiselect(
+    "Choose your Industry:",
+    options=datahub["industry"].unique() 
+)
+
+########## Apply filters
 # Create filter widgets
-tools = st.multiselect("Select Tools:", options=datahub["tools"].unique())
-education = st.multiselect("Select Education:", options=datahub["education"].unique())
-satisfaction = st.multiselect("Select Satisfaction:", options=datahub["satisfaction"].unique())
-industry = st.multiselect("Select Industry:", options=datahub["industry"].unique())
+#tools = st.multiselect("Select Tools:", options=datahub["tools"].unique())
+#education = st.multiselect("Select Education:", options=datahub["education"].unique())
+#satisfaction = st.multiselect("Select Satisfaction:", options=datahub["satisfaction"].unique())
+#industry = st.multiselect("Select Industry:", options=datahub["industry"].unique())
 
 # Apply filters
 filtered_data = datahub.copy()
@@ -64,7 +83,6 @@ if not filtered_data.empty:
     st.plotly_chart(fig)
 else:
     st.warning("No data available for the selected filters.")
-
 # Display last updated time near the sidebar
 st.sidebar.markdown("#### Last Updated:")
 st.sidebar.write(datetime.datetime.now().strftime("%d %B %Y"))
