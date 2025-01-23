@@ -9,7 +9,6 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-
 # Page configuration
 st.set_page_config(
     page_title="Datahub Newbies Survey",
@@ -73,7 +72,7 @@ if satisfaction:
     filtered_data = filtered_data[filtered_data["satisfaction"].isin(satisfaction)]
 if industry:
     filtered_data = filtered_data[filtered_data["industry"].isin(industry)]
-    
+
 # Display last updated time near the sidebar
 st.sidebar.markdown("#### Last Updated:")
 st.sidebar.write(datetime.datetime.now().strftime("%d %B %Y"))
@@ -81,7 +80,7 @@ st.sidebar.write(datetime.datetime.now().strftime("%d %B %Y"))
 # Chart 1: Industry and Tools
 try:
     fig1 = px.bar(
-        datahub,
+        filtered_data,  # Use filtered data
         x="industry",
         y="tools",
         title="Industry and Tools used by Analysts",
@@ -96,7 +95,7 @@ except KeyError as e:
 # Chart 2: Tools and Experience
 try:
     fig2 = px.bar(
-        datahub,
+        filtered_data,  # Use filtered data
         x="experience",
         y="tools",
         title="Tools used and Years of Experience",
@@ -119,7 +118,7 @@ with col2:
 
 # Chart 3: Proportion of Experience Levels
 try:
-    experience_counts = datahub["experience"].value_counts().reset_index()
+    experience_counts = filtered_data["experience"].value_counts().reset_index()  # Use filtered data
     experience_counts.columns = ["experience", "count"]
     fig3 = px.pie(
         experience_counts,
@@ -135,7 +134,7 @@ except KeyError as e:
 # Chart 4: Experience Distribution Across Industries
 try:
     experience_dist = (
-        datahub.groupby(["motivation", "satisfaction", "industry", "experience"])
+        filtered_data.groupby(["motivation", "satisfaction", "industry", "experience"])  # Use filtered data
         .size()
         .reset_index(name="count")
     )
@@ -198,12 +197,12 @@ with col6:
 st.markdown("### View and Download Data")
 with st.expander("View Data"):
     try:
-        st.write(filtered_data)
+        st.write(filtered_data)  # Use filtered data
     except Exception as e:
         st.error(f"Error displaying data: {e}")
 
     try:
-        csv = filtered_data.to_csv(index=False).encode("utf-8")
+        csv = filtered_data.to_csv(index=False).encode("utf-8")  # Use filtered data
         st.download_button(
             label="Download Filtered Dataset",
             data=csv,
@@ -217,7 +216,7 @@ with st.expander("View Data"):
 st.markdown("### Scatter Plot: Motivation vs Satisfaction")
 try:
     scatter_fig = px.scatter(
-        datahub,
+        filtered_data,  # Use filtered data
         x="satisfaction_numeric",
         y="motivation_numeric",
         title="Relationship Between Motivation and Satisfaction",
@@ -226,22 +225,3 @@ try:
     st.plotly_chart(scatter_fig, use_container_width=True)
 except KeyError as e:
     st.error(f"Missing columns for scatter plot: {e}")
-
-# Data view and download
-st.markdown("### View and Download Data")
-with st.expander("View Data"):
-    try:
-        st.write(datahub.style.background_gradient(cmap="Blues"))
-    except Exception as e:
-        st.error(f"Error displaying data: {e}")
-
-    try:
-        csv = datahub.to_csv(index=False).encode("utf-8")
-        st.download_button(
-            label="Download Full Dataset",
-            data=csv,
-            file_name="newbies_data.csv",
-            mime="text/csv"
-        )
-    except Exception as e:
-        st.error(f"Error preparing data for download: {e}")
