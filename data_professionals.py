@@ -3,6 +3,8 @@ import pandas as pd
 import datetime
 from PIL import Image
 import plotly.express as px
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 import plotly.graph_objects as go
@@ -63,24 +65,25 @@ if selected_tools:
     filtered_data = datahub[datahub['tools'].isin(selected_tools)]
 else:
     filtered_data = datahub
->>>>>>> 98f1b962dde908808a7d0f7bc6d9cb30da5924a9
+
 
 # Display filtered data as a table
 st.write("Filtered Data:")
 st.write(filtered_data)
 
 # Plot a bar chart with the filtered data
-fig, ax = plt.subplots()
+
 usage_sums = filtered_data.groupby('Tool')['Usage'].sum()  # Aggregate usage by Tool
-ax.bar(usage_sums.index, usage_sums.values, color='skyblue')
-ax.set_xlabel("tools")
-ax.set_ylabel("Usage (%)")
-ax.set_title("Tool Usage by Professionals")
-ax.spines[['top', 'right']].set_visible(False)  # Remove top and right spines
+# Direct plotting without the ax object
+plt.bar(usage_sums.index, usage_sums.values, color='skyblue')
+plt.xlabel("tools")
+plt.ylabel("Usage (%)")
+plt.title("Tool Usage by Professionals")
+plt.gca().spines[['top', 'right']].set_visible(False)   # Remove top and right spines
 
 # Add data labels
 for i, v in enumerate(usage_sums.values):
-    ax.text(i, v + 2, str(v), ha='center')
+    plt.text(i, v + 2, str(v), ha='center')
 
 # Display the chart
-st.pyplot(fig)
+st.pyplot(plt)
