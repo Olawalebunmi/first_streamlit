@@ -16,6 +16,7 @@ st.markdown('<style>div.block-container{padding-top:1rem;}</style>', unsafe_allo
 col2 = st.columns([0.9])
 
 
+st.header("Filters")
 html_title = """
 <style>
     .title-test {
@@ -25,6 +26,42 @@ html_title = """
     }
     </style>
     <center><h1 class="title-test">Data Analyst Survey Dashboard</h1></center>"""
+
+#creating filter
+# Create for tools
+st.sidebar.header("Choose your Filter: ")
+tools = st.sidebar.multiselect("Pick your Tools", datahub["tools"].unique())
+
+#create for education
+st.sidebar.header("choose your filter: ")
+education = st.sidebar.multiselect("Choose your Education Level", datahub["education"].unique())
+
+#create for satisfaction
+satisfaction = ("Choose Satisfaction Level", datahub["satisfaction"].unique())
+
+#create for sindustry
+industry = ("Choose your Industry", datahub["industry"].unique())
+
+# Industry andTools
+with col2:
+    try:
+        fig1= px.bar(
+            datahub,
+            x="Industry",
+            y="Tools",
+            labels={"industry": "industry"},
+            title="Industry and Tools used by Analysts",
+            hover_data=["industry"],
+            template="seaborn",
+            height=400,
+             text_auto=True
+        )
+        st.plotly_chart(fig1, use_container_width=True)
+    except KeyError as e:
+        st.error(f"Missing required columns for chart: {e}")
+
+
+
 with col2:
     st.markdown(html_title, unsafe_allow_html=True)
 
