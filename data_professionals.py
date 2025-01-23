@@ -32,7 +32,7 @@ except FileNotFoundError:
 
 # Dashboard Title
 st.markdown("<center><h1>Data Analyst Survey Dashboard</h1></center>", unsafe_allow_html=True)
-
+st.write("filter")
 # Date of last update
 col1, col2, col3 = st.columns([0.3, 0.7, 0.7])
 with col1:
