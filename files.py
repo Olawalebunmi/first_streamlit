@@ -3,12 +3,12 @@ import pandas as pd
 import datetime
 import plotly.express as px
 import plotly.figure_factory as ff
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import warnings
 
 warnings.filterwarnings("ignore")
 
-st.write("Hello there")
+
 # Page configuration
 st.set_page_config(
     page_title="Datahub Newbies Survey",
