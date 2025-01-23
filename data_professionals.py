@@ -43,6 +43,10 @@ selected_tools = st.sidebar.multiselect(
     default=distinct_tools  # Default selection (all tools)
 )
 
+# Display filtered data in the sidebar
+st.sidebar.subheader("Filtered Data")
+st.sidebar.dataframe("filtered_data")
+
 # Filter data based on selection
 if selected_tools:
     filtered_data = datahub[datahub['tools'].isin(selected_tools)]
