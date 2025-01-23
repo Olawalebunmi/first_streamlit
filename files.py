@@ -38,34 +38,42 @@ except FileNotFoundError:
 # Sidebar filters & widget
 tools = st.sidebar.multiselect(
     "Pick your Tools:",
-    options=datahub["tools"].unique() 
+    options=datahub["tools"].unique(),
+    default=datahub["tools"].unique()
 )
 
 education = st.sidebar.multiselect(
     "Choose your Education Level:",
-    options=datahub["education"].unique() 
+    options=datahub["education"].unique(),
+    default=datahub["education"].unique()
 )
 
 satisfaction = st.sidebar.multiselect(
     "Choose Satisfaction Level:",
-    options=datahub["satisfaction"].unique() 
+    options=datahub["satisfaction"].unique(),
+    default=datahub["satisfaction"].unique()
 )
 
 industry = st.sidebar.multiselect(
     "Choose your Industry:",
-    options=datahub["industry"].unique() 
+    options=datahub["industry"].unique(),
+    default=datahub["industry"].unique()
+)
+
+datahub_selection = datahub.query(
+    "tools ==@tools & education ==@education & satisfaction ==@satisfaction & industry ==@industry"
 )
 
 # Apply filters
-filtered_data = datahub.copy()
-if tools:
-    filtered_data = filtered_data[filtered_data["tools"].isin(tools)]
-if education:
-    filtered_data = filtered_data[filtered_data["education"].isin(education)]
-if satisfaction:
-    filtered_data = filtered_data[filtered_data["satisfaction"].isin(satisfaction)]
-if industry:
-    filtered_data = filtered_data[filtered_data["industry"].isin(industry)]
+#filtered_data = datahub.copy()
+#if tools:
+    #filtered_data = filtered_data[filtered_data["tools"].isin(tools)]
+#if education:
+    #filtered_data = filtered_data[filtered_data["education"].isin(education)]
+#if satisfaction:
+    #filtered_data = filtered_data[filtered_data["satisfaction"].isin(satisfaction)]
+#if industry:
+    #filtered_data = filtered_data[filtered_data["industry"].isin(industry)]
     
 # Display last updated time near the sidebar
 st.sidebar.markdown("#### Last Updated:")
