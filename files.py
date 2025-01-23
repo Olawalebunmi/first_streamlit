@@ -36,44 +36,41 @@ except FileNotFoundError:
     st.stop()
 
 # Sidebar filters & widget
+# Sidebar filters
 tools = st.sidebar.multiselect(
     "Pick your Tools:",
-    options=datahub["tools"].unique(),
-    default=datahub["tools"].unique()
+    options=datahub["tools"].unique() if "tools" in datahub.columns else [],
+    default=[]
 )
 
 education = st.sidebar.multiselect(
     "Choose your Education Level:",
-    options=datahub["education"].unique(),
-    default=datahub["education"].unique()
+    options=datahub["education"].unique() if "education" in datahub.columns else [],
+    default=[]
 )
 
 satisfaction = st.sidebar.multiselect(
     "Choose Satisfaction Level:",
-    options=datahub["satisfaction"].unique(),
-    default=datahub["satisfaction"].unique()
+    options=datahub["satisfaction"].unique() if "satisfaction" in datahub.columns else [],
+    default=[]
 )
 
 industry = st.sidebar.multiselect(
     "Choose your Industry:",
-    options=datahub["industry"].unique(),
-    default=datahub["industry"].unique()
-)
-
-datahub_selection = datahub.query(
-    "tools ==@tools & education ==@education & satisfaction ==@satisfaction & industry ==@industry"
+    options=datahub["industry"].unique() if "industry" in datahub.columns else [],
+    default=[]
 )
 
 # Apply filters
-#filtered_data = datahub.copy()
-#if tools:
-    #filtered_data = filtered_data[filtered_data["tools"].isin(tools)]
-#if education:
-    #filtered_data = filtered_data[filtered_data["education"].isin(education)]
-#if satisfaction:
-    #filtered_data = filtered_data[filtered_data["satisfaction"].isin(satisfaction)]
-#if industry:
-    #filtered_data = filtered_data[filtered_data["industry"].isin(industry)]
+filtered_data = datahub.copy()
+if tools:
+    filtered_data = filtered_data[filtered_data["tools"].isin(tools)]
+if education:
+    filtered_data = filtered_data[filtered_data["education"].isin(education)]
+if satisfaction:
+    filtered_data = filtered_data[filtered_data["satisfaction"].isin(satisfaction)]
+if industry:
+    filtered_data = filtered_data[filtered_data["industry"].isin(industry)]
     
 # Display last updated time near the sidebar
 st.sidebar.markdown("#### Last Updated:")
