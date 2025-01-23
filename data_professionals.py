@@ -3,8 +3,8 @@ import pandas as pd
 import datetime
 from PIL import Image
 import plotly.express as px
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 import plotly.graph_objects as go
@@ -71,19 +71,3 @@ else:
 st.write("Filtered Data:")
 st.write(filtered_data)
 
-# Plot a bar chart with the filtered data
-
-usage_sums = filtered_data.groupby('Tool')['Usage'].sum()  # Aggregate usage by Tool
-# Direct plotting without the ax object
-plt.bar(usage_sums.index, usage_sums.values, color='skyblue')
-plt.xlabel("tools")
-plt.ylabel("Usage (%)")
-plt.title("Tool Usage by Professionals")
-plt.gca().spines[['top', 'right']].set_visible(False)   # Remove top and right spines
-
-# Add data labels
-for i, v in enumerate(usage_sums.values):
-    plt.text(i, v + 2, str(v), ha='center')
-
-# Display the chart
-st.pyplot(plt)
