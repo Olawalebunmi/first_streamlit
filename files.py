@@ -83,6 +83,7 @@ if not filtered_data.empty:
     st.plotly_chart(fig)
 else:
     st.warning("No data available for the selected filters.")
+    
 # Display last updated time near the sidebar
 st.sidebar.markdown("#### Last Updated:")
 st.sidebar.write(datetime.datetime.now().strftime("%d %B %Y"))
