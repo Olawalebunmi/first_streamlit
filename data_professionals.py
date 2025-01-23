@@ -40,7 +40,7 @@ st.sidebar.header("Choose your Filter: ")
 st.sidebar.header("Filter Options")
 tools = st.sidebar.multiselect(
     "Pick your Tools",  # Label for the widget
-    options=datahub['Tools'].tolist(),  # Convert the 'Tools' column to a list
+    options=datahub['tools'].tolist(),  # Convert the 'Tools' column to a list
     default=None  # No default selection
 )
 
