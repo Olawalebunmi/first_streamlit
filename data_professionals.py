@@ -3,6 +3,7 @@ import pandas as pd
 import datetime
 from PIL import Image
 import plotly.express as px
+import matplotlib.pyplot as plt
 
 import plotly.graph_objects as go
 
@@ -38,27 +39,47 @@ st.sidebar.header("Choose your Filter: ")
 
 # Sidebar multiselect with proper options
 st.sidebar.header("Filter Options")
-tools = st.sidebar.multiselect(
+selected_tools = st.sidebar.multiselect(
     "Pick your Tools",  # Label for the widget
     options=datahub['tools'].tolist(),  # Convert the 'Tools' column to a list
-    default=None  # No default selection
+    default=datahub['tools']  # No default selection
 )
 
-# Display the selected tools
-if tools:
-    st.write("You selected:", tools)
+# Filter data based on selection
+if selected_tools:
+    filtered_data = datahub[datahub['tools'].isin(selected_tools)]
+    st.write("You selected:", "tools")
 else:
+    filtered_data = datahub
     st.write("No tools selected yet!")
 
-# Filter the DataFrame based on selected tools (if necessary)
-if tools:
-    filtered_data = datahub[datahub['Tools'].isin(tools)]
-    st.write("Filtered Data:")
-    st.write(filtered_data)
-else:
-    st.write("Showing all data:")
-    st.write(datahub)
+# Display filtered data as a table
+st.write("Filtered Data:")
+st.write(filtered_data)
 
+# View and download filtered data
+st.write("filtered data")
+_, view1, dwn1 = st.columns([0.15, 0.1, 0.15])
+
+with view1:
+    expander = st.expander("View grouped data")
+    try:
+        grouped_data = datahub.groupby("tools").sum()
+        expander.write(grouped_data)
+    except KeyError as e:
+        st.error(f"Missing required columns for grouping: {e}")
+
+with dwn1:
+    try:
+        csv_data = grouped_data.to_csv().encode("utf-8")
+        st.download_button(
+            "Download Data",
+            data=csv_data,
+            file_name="Tools.csv",
+            mime="text/csv",
+            help = "Click here to download the data as a csv file"
+        )
+        
 ##############################################
 # Sidebar multiselect with proper options
 st.sidebar.header("Filter Options")
