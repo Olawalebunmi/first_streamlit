@@ -7,7 +7,7 @@ import numpy as np
 import plotly.graph_objects as go
 import warnings
 
-st.write("Hello")
+
 warnings.filterwarnings("ignore")
 
 # Page configuration
