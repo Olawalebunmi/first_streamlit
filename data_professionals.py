@@ -3,7 +3,7 @@ import pandas as pd
 import datetime
 from PIL import Image
 import plotly.express as px
-<<<<<<< HEAD
+
 
 import plotly.graph_objects as go
 
@@ -80,9 +80,7 @@ with col4:
     
 
 
-=======
 import matplotlib.pyplot as plt
->>>>>>> 950cf21561d90e4623e6bdbbf95da9bf6c32a9c1
 
 
 # Page configuration
