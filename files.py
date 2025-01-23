@@ -36,12 +36,25 @@ except FileNotFoundError:
     st.stop()
 
 # Sidebar filters & widget
-# Sidebar filters
-# Create filter widgets
-tools = st.multiselect("Select Tools:", options=datahub["tools"].unique())
-education = st.multiselect("Select Education:", options=datahub["education"].unique())
-satisfaction = st.multiselect("Select Satisfaction:", options=datahub["satisfaction"].unique())
-industry = st.multiselect("Select Industry:", options=datahub["industry"].unique())
+tools = st.sidebar.multiselect(
+    "Pick your Tools:",
+    options=datahub["tools"].unique() 
+)
+
+education = st.sidebar.multiselect(
+    "Choose your Education Level:",
+    options=datahub["education"].unique() 
+)
+
+satisfaction = st.sidebar.multiselect(
+    "Choose Satisfaction Level:",
+    options=datahub["satisfaction"].unique() 
+)
+
+industry = st.sidebar.multiselect(
+    "Choose your Industry:",
+    options=datahub["industry"].unique() 
+)
 
 # Apply filters
 filtered_data = datahub.copy()
@@ -53,16 +66,6 @@ if satisfaction:
     filtered_data = filtered_data[filtered_data["satisfaction"].isin(satisfaction)]
 if industry:
     filtered_data = filtered_data[filtered_data["industry"].isin(industry)]
-
-# Display filtered data
-st.write("Filtered Data:", filtered_data)
-
-# Create a chart with filtered data
-if not filtered_data.empty:
-    fig = px.bar(filtered_data, x="tools", y="value", color="satisfaction", barmode="group")
-    st.plotly_chart(fig)
-else:
-    st.warning("No data available for the selected filters.")
     
 # Display last updated time near the sidebar
 st.sidebar.markdown("#### Last Updated:")
