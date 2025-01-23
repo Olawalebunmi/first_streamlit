@@ -7,7 +7,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-st.title("Data Analyst Dashboard")
+
 # Page configuration
 st.set_page_config(
     page_title="Datahub Newbies Survey",
@@ -106,6 +106,7 @@ except KeyError as e:
     st.error(f"Missing columns for 'Tools and Experience' chart: {e}")
 
 # Display Chart Pair 1
+st.title("Data Analyst Dashboard")
 st.markdown("### Industry and Tools vs Tools and Experience")
 col1, col2 = st.columns(2)
 with col1:
