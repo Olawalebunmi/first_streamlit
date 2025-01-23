@@ -7,6 +7,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
+st.title("Data Analyst Dashboard")
 # Page configuration
 st.set_page_config(
     page_title="Datahub Newbies Survey",
