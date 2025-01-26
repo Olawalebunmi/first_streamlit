@@ -141,45 +141,6 @@ except KeyError as e:
     fig2 = None
     st.error(f"Missing columns for 'Tools and Experience' chart: {e}")
 
-# Display Chart Pair 1
-#st.title("Data Analyst Dashboard")
-#st.title("### Data Analyst Dashboard")
-col1, col2 = st.columns(2)
-with col1:
-    st.plotly_chart(fig1, use_container_width=True)
-with col2:
-    st.plotly_chart(fig2, use_container_width=True)
-
-# Data view and download
-#st.markdown("##View and Download Data")
-# source data for tools and experience
-
-#_view1, dwn1, view2, dwn2 = ([0.15,0.20,0.20,0.20])
-
-# Display Chart Pair 1
-col1, col2 = st.columns(2)
-
-# Ensure unique identifiers by using separate variables
-with col1:
-    if fig1 is not None and not fig1.data:  # Check if fig1 has data
-        st.warning("No data available for the first chart.")
-    else:
-        st.plotly_chart(fig1, use_container_width=True, key="chart1")  # Add a unique key for the chart
-
-    with st.expander("tools and industry", expanded=True):
-        # Add a button to show data on click
-        if st.button("Show Data"):
-            try:
-                if datahub.empty:  # Check if datahub is empty
-                    st.warning("No data available for 'tools and industry'.")
-                else:
-                    # Group data by tools and aggregate industries
-                    data = datahub.groupby("tools")["industry"].apply(lambda x: ", ".join(x.unique())).reset_index()
-                    data.columns = ["tools", "industries"]  # Rename columns for clarity
-                    st.write(data)
-            except KeyError as e:
-                st.error(f"Error creating 'Tools and Industry' table: {e}")
-
 
 # Chart 4: Experience Distribution Across Industries
 try:
