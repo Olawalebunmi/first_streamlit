@@ -186,7 +186,7 @@ except KeyError as e:
     st.error(f"Missing columns for 'Experience Distribution' treemap: {e}")
 
 # Display Chart Pair 2
-st.markdown("### Proportion of Experience Levels and Experience Distribution")
+#st.markdown("### Proportion of Experience Levels and Experience Distribution")
 col3, col4 = st.columns(2)
 with col3:
     st.plotly_chart(fig3, use_container_width=True)
@@ -220,7 +220,7 @@ except KeyError as e:
     st.error(f"Missing column for 'Satisfaction by Industry' pie chart: {e}")
 
 # Display Chart Pair 3
-st.markdown("### Motivation and Satisfaction by Industry")
+#st.markdown("### Motivation and Satisfaction by Industry")
 col5, col6 = st.columns(2)
 with col5:
     st.plotly_chart(fig5, use_container_width=True)
