@@ -165,7 +165,7 @@ with col1:
         try:
             # Group data by tools and aggregate industries
             data = datahub.groupby("tools")["industry"].apply(lambda x: ", ".join(x.unique())).reset_index()
-            data.columns = ["Tools", "Industries"]  # Rename columns for clarity
+            data.columns = ["tools", "industries"]  # Rename columns for clarity
             st.write("Tools and Industry data")
         except KeyError as e:
             st.error(f"Error creating 'Tools and Industry' table: {e}")
@@ -176,7 +176,7 @@ with col2:
         try:
             # Group data by tools and aggregate industries
             data = datahub.groupby("tools")["experience"].apply(lambda x: ", ".join(x.unique())).reset_index()
-            data.columns = ["Tools", "Experience"]  # Rename columns for clarity
+            data.columns = ["tools", "experience"]  # Rename columns for clarity
             st.write("Tools and Experience")
         except KeyError as e:
             st.error(f"Error creating 'Tools and Industry' table: {e}")
