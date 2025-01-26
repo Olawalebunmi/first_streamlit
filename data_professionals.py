@@ -40,6 +40,14 @@ except FileNotFoundError:
     st.stop()
 
 
+# Title and layout
+st.title("Data Analyst Dashboard")
+st.markdown("---")  # Horizontal line for separation
+
+# KPI section with small compact columns
+kpi_cols = st.columns(3, gap="small")  # Use small gap for compact display
+
+
 # KPI calculations
 num_respondents = datahub['id'].nunique()
 
@@ -51,13 +59,13 @@ num_tools=datahub["tools"].nunique()
 col1, col2, col3 = st.columns(3)
 
 # KPI Display
-with col1:
+with kpi_cols[0]:
     st.metric("Number of Respondents", num_respondents)
 
-with col2:
+with kpi_cols[1]:
     st.metric("Number of Industry", num_industry)
 
-with col3:
+with kpi_cols[2]:
     st.metric("Number of Tools", num_tools)
 
 
@@ -135,7 +143,7 @@ except KeyError as e:
 
 # Display Chart Pair 1
 #st.title("Data Analyst Dashboard")
-st.title("### Data Analyst Dashboard")
+#st.title("### Data Analyst Dashboard")
 col1, col2 = st.columns(2)
 with col1:
     st.plotly_chart(fig1, use_container_width=True)
