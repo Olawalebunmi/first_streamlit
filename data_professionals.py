@@ -17,13 +17,7 @@ st.set_page_config(
 )
 
 
-# KPI calculations
-if "id" in datahub.columns:
-    datahub['id'] = pd.to_numeric(datahub['id'], errors='coerce')  # Convert non-numeric to NaN
-    total_respondents = datahub['id'].sum()
-else:
-    total_respondents = 0
-    st.error("'id' column not found in the dataset.")
+
 
 # Sidebar filters
 st.sidebar.header("Choose your Filter:")
@@ -44,6 +38,25 @@ try:
 except FileNotFoundError:
     st.error("The file 'newbies_numeric.csv' was not found. Please upload the file.")
     st.stop()
+
+
+# KPI calculations
+total_respondents = datahub["id"].sum()
+
+total_industry = datahub["industry"].sum()
+
+# Streamlit App
+st.title("Respondent's KPIs Dashboard")
+
+col1, col2 = st.columns(2)
+
+# KPI Display
+with col1:
+    st.metric (label="Total Respondents", value=f"${total_respondents:,.2f}")
+
+with col2:
+    st.metric("label:Total_Industry", value=f"{total_industry}")
+
 
 # Sidebar filters & widget
 # Sidebar filters
