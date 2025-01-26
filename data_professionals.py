@@ -16,6 +16,11 @@ st.set_page_config(
     layout="wide"
 )
 
+
+# KPI calculations
+total_respondents = datahub['id'].sum()
+
+
 # Sidebar filters
 st.sidebar.header("Choose your Filter:")
 
