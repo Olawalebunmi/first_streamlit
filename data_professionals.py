@@ -156,15 +156,30 @@ with col2:
 
 #_view1, dwn1, view2, dwn2 = ([0.15,0.20,0.20,0.20])
 
-with st.expander("Tools and Industry"):
-    try:
-        # Group data by tools and aggregate industries
-        data = datahub.groupby("tools")["industry"].apply(lambda x: ", ".join(x.unique())).reset_index()
-        data.columns = ["Tools", "Industries"]  # Rename columns for clarity
-        st.write(data)
-    except KeyError as e:
-        st.error(f"Error creating 'Tools and Industry' table: {e}")
-
+# Display Chart Pair 1
+col1, col2 = st.columns(2)
+with col1:
+    st.plotly_chart(fig1, use_container_width=True)
+    # Add "Tools and Industry" expander below the first chart
+    with st.expander("Tools and Industry"):
+        try:
+            # Group data by tools and aggregate industries
+            data = datahub.groupby("tools")["industry"].apply(lambda x: ", ".join(x.unique())).reset_index()
+            data.columns = ["Tools", "Industries"]  # Rename columns for clarity
+            st.write("Tools and Industry data")
+        except KeyError as e:
+            st.error(f"Error creating 'Tools and Industry' table: {e}")
+with col2:
+    st.plotly_chart(fig2, use_container_width=True)
+    # Add "Tools and Industry" expander below the first chart
+    with st.expander("Tools and Experience"):
+        try:
+            # Group data by tools and aggregate industries
+            data = datahub.groupby("tools")["experience"].apply(lambda x: ", ".join(x.unique())).reset_index()
+            data.columns = ["Tools", "Experience"]  # Rename columns for clarity
+            st.write("Tools and Experience")
+        except KeyError as e:
+            st.error(f"Error creating 'Tools and Industry' table: {e}")
 
 # Chart 3: Proportion of Experience Levels
 try:
