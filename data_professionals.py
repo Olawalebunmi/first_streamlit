@@ -159,7 +159,7 @@ with col2:
 # Display Chart Pair 1
 col1, col2 = st.columns(2)
 with col1:
-    st.plotly_chart(fig1, use_container_width=True)
+    st.plotly_chart(fig1, use_container_width=True, key="chart1")
     # Add "Tools and Industry" expander below the first chart
     with st.expander("Tools and Industry"):
         try:
@@ -170,7 +170,7 @@ with col1:
         except KeyError as e:
             st.error(f"Error creating 'Tools and Industry' table: {e}")
 with col2:
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2, use_container_width=True, key="chart2")
     # Add "Tools and Industry" expander below the first chart
     with st.expander("Tools and Experience"):
         try:
