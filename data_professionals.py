@@ -154,12 +154,29 @@ with col2:
 #st.markdown("##View and Download Data")
 # source data for tools and experience
 
-_view1, dwn1, view2, dwn2 = ([0.15,0.20,0.20,0.20])
+#_view1, dwn1, view2, dwn2 = ([0.15,0.20,0.20,0.20])
 
-with view1:
-    expander = st.expander("Tools and Industry")
-    data = datahub[["tools", "industry"]].groupby(by="tools")["industry"].sum()
-    expander.write(datahub)
+#with view1:
+    #expander = st.expander("Tools and Industry")
+    #data = datahub[["tools", "industry"]].groupby(by="tools")["industry"].sum()
+    #expander.write(datahub)
+
+
+# Filter Data
+filtered_data = datahub.copy()
+
+if tools:
+    filtered_data = filtered_data[filtered_data["tools"].isin(tools)]
+
+if industry:
+    filtered_data = filtered_data[filtered_data["experience"].isin(industry)]
+
+# Display Filtered Table
+st.title("Filtered Table: Tools and Experience")
+if filtered_data.empty:
+    st.warning("No data available for the selected filters.")
+else:
+    st.write(filtered_data)
 
 # Chart 3: Proportion of Experience Levels
 try:
