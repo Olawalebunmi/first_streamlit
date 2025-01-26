@@ -228,7 +228,7 @@ with col6:
     st.plotly_chart(fig6, use_container_width=True)
 
 # Data view and download
-st.markdown("### View and Download Data")
+#st.markdown("##View and Download Data")
 with st.expander("View Data"):
     try:
         st.write(filtered_data)  # Use filtered data
@@ -247,7 +247,7 @@ with st.expander("View Data"):
         st.error(f"Error preparing data for download: {e}")
 
 # Scatter Plot: Motivation vs Satisfaction
-st.markdown("### Scatter Plot: Motivation vs Satisfaction")
+#st.markdown("### Scatter Plot: Motivation vs Satisfaction")
 try:
     scatter_fig = px.scatter(
         filtered_data,  # Use filtered data
