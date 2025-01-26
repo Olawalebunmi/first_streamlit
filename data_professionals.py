@@ -153,20 +153,28 @@ with col2:
 # Data view and download
 #st.markdown("##View and Download Data")
 # source data for tools and experience
-_, view1, dwn1, view2, dwn2 = ([0.15,0.20, 0.20,0.20])
-with view1:
-    expander = st.expander("Tools and Industry")
-    data = datahub[["tools, industry"]].groupby(by="industry")["tools"].sum()
-    expander.write(data)
 
-with st.expander("View Data"):
-    try:
-        st.write(filtered_data)  # Use filtered data
-    except Exception as e:
-        st.error(f"Error displaying data: {e}")
+# Filter Data
+filtered_data = datahub.copy()
 
+if tools:
+    filtered_data = filtered_data[filtered_data["tools"].isin(tools)]
+
+if industry:
+    filtered_data = filtered_data[filtered_data["industry"].isin(industry)]
+
+# Display Filtered Table
+st.title("Filtered Table: Tools and Industry")
+if filtered_data.empty:
+    st.warning("No data available for the selected filters.")
+else:
+    st.write(filtered_data)
+
+# Data Download
+st.markdown("### Download Filtered Data")
+if not filtered_data.empty:
     try:
-        csv = filtered_data.to_csv(index=False).encode("utf-8")  # Use filtered data
+        csv = filtered_data.to_csv(index=False).encode("utf-8")
         st.download_button(
             label="Download Filtered Dataset",
             data=csv,
