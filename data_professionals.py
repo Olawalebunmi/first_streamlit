@@ -180,40 +180,6 @@ with col1:
             except KeyError as e:
                 st.error(f"Error creating 'Tools and Industry' table: {e}")
 
-with col2:
-    if fig2 is not None and not fig2.data:  # Check if fig2 has data
-        st.warning("No data available for the second chart.")
-    else:
-        st.plotly_chart(fig2, use_container_width=True, key="chart2")  # Add another unique key for this chart
-        with st.expander("tools and experience", expanded=True):
-
-        # Add a button to show data on click
-        if st.button("Show Data"):
-            try:
-                if datahub.empty:  # Check if datahub is empty
-                    st.warning("No data available for 'tools and experience'.")
-                else:
-                    # Group data by tools and aggregate industries
-                    data = datahub.groupby("tools")["experience"].apply(lambda x: ", ".join(x.unique())).reset_index()
-                    data.columns = ["tools", "experience"]  # Rename columns for clarity
-                    st.write(data)
-            except KeyError as e:
-                st.error(f"Error creating 'tools and experience' table: {e}")
-
-# Chart 3: Proportion of Experience Levels
-try:
-    experience_counts = filtered_data["experience"].value_counts().reset_index()  # Use filtered data
-    experience_counts.columns = ["experience", "count"]
-    fig3 = px.pie(
-        experience_counts,
-        values="count",
-        names="experience",
-        title="Proportion of Experience Levels",
-        hole=0.5
-    )
-except KeyError as e:
-    fig3 = None
-    st.error(f"Missing column for 'Experience Levels' pie chart: {e}")
 
 # Chart 4: Experience Distribution Across Industries
 try:
