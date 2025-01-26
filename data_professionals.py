@@ -150,6 +150,25 @@ with col1:
 with col2:
     st.plotly_chart(fig2, use_container_width=True)
 
+# Data view and download
+#st.markdown("##View and Download Data")
+with st.expander("View Data"):
+    try:
+        st.write(filtered_data)  # Use filtered data
+    except Exception as e:
+        st.error(f"Error displaying data: {e}")
+
+    try:
+        csv = filtered_data.to_csv(index=False).encode("utf-8")  # Use filtered data
+        st.download_button(
+            label="Download Filtered Dataset",
+            data=csv,
+            file_name="filtered_data.csv",
+            mime="text/csv"
+        )
+    except Exception as e:
+        st.error(f"Error preparing data for download: {e}")
+
 # Chart 3: Proportion of Experience Levels
 try:
     experience_counts = filtered_data["experience"].value_counts().reset_index()  # Use filtered data
