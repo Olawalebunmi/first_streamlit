@@ -134,8 +134,8 @@ except KeyError as e:
     st.error(f"Missing columns for 'Tools and Experience' chart: {e}")
 
 # Display Chart Pair 1
-st.title("Data Analyst Dashboard")
-#st.markdown("### Industry and Tools vs Tools and Experience")
+#st.title("Data Analyst Dashboard")
+st.title("### Data Analyst Dashboard")
 col1, col2 = st.columns(2)
 with col1:
     st.plotly_chart(fig1, use_container_width=True)
