@@ -47,8 +47,6 @@ num_industry= datahub['industry'].nunique()
 
 num_tools=datahub["tools"].nunique()
 
-# Streamlit App
-st.title("Respondent's KPIs Dashboard")
 
 col1, col2, col3 = st.columns(3)
 
@@ -60,7 +58,7 @@ with col2:
     st.metric("Number of Industry", num_industry)
 
 with col3:
-    st.metric("Nuuumber of Tools", num_tools)
+    st.metric("Number of Tools", num_tools)
 
 
 
