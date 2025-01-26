@@ -41,21 +41,27 @@ except FileNotFoundError:
 
 
 # KPI calculations
-total_respondents = datahub["id"].sum()
+num_respondents = datahub['Respondent'].nunique()
 
-total_industry = datahub["industry"].sum()
+num_industry= datahub['Respondent'].nunique()
+
+num_tools=datahub["tools"].nunique()
 
 # Streamlit App
 st.title("Respondent's KPIs Dashboard")
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 # KPI Display
 with col1:
-    st.metric (label="Total Respondents", value=f"${total_respondents:,.2f}")
+    st.metric("Number of Respondents", num_respondents)
 
 with col2:
-    st.metric("label:Total_Industry", value=f"{total_industry}")
+    st.metric("label:Total_Industry", num_industry)
+
+with col3:
+    st.metric("label:Total_Tools", num_tools)
+
 
 
 # Sidebar filters & widget
