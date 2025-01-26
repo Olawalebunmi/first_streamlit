@@ -142,45 +142,28 @@ except KeyError as e:
     st.error(f"Missing columns for 'Tools and Experience' chart: {e}")
 
 # Display Chart Pair 1
-#st.title("Data Analyst Dashboard")
-#st.title("### Data Analyst Dashboard")
+st.title("Data Analyst Dashboard")
+st.markdown("### Industry and Tools vs Tools and Experience")
 col1, col2 = st.columns(2)
 with col1:
     st.plotly_chart(fig1, use_container_width=True)
 with col2:
     st.plotly_chart(fig2, use_container_width=True)
 
-# Data view and download
-#st.markdown("##View and Download Data")
-# source data for tools and experience
-
-#_view1, dwn1, view2, dwn2 = ([0.15,0.20,0.20,0.20])
-
-# Display Chart Pair 1
-col1, col2 = st.columns(2)
-
-# Ensure unique identifiers by using separate variables
-with col1:
-    if fig1 is not None and not fig1.data:  # Check if fig1 has data
-        st.warning("No data available for the first chart.")
-    else:
-        st.plotly_chart(fig1, use_container_width=True, key="chart1")  # Add a unique key for the chart
-
-    with st.expander("tools and industry", expanded=True):
-        # Add a button to show data on click
-        if st.button("Show Data"):
-            try:
-                if datahub.empty:  # Check if datahub is empty
-                    st.warning("No data available for 'tools and industry'.")
-                else:
-                    # Group data by tools and aggregate industries
-                    data = datahub.groupby("tools")["industry"].apply(lambda x: ", ".join(x.unique())).reset_index()
-                    data.columns = ["tools", "industries"]  # Rename columns for clarity
-                    st.write(data)
-            except KeyError as e:
-                st.error(f"Error creating 'Tools and Industry' table: {e}")
-
-
+# Chart 3: Proportion of Experience Levels
+try:
+    experience_counts = filtered_data["experience"].value_counts().reset_index()  # Use filtered data
+    experience_counts.columns = ["experience", "count"]
+    fig3 = px.pie(
+        experience_counts,
+        values="count",
+        names="experience",
+        title="Proportion of Experience Levels",
+        hole=0.5
+    )
+except KeyError as e:
+    fig3 = None
+    st.error(f"Missing column for 'Experience Levels' pie chart: {e}")
 
 # Chart 4: Experience Distribution Across Industries
 try:
@@ -203,7 +186,7 @@ except KeyError as e:
     st.error(f"Missing columns for 'Experience Distribution' treemap: {e}")
 
 # Display Chart Pair 2
-#st.markdown("### Proportion of Experience Levels and Experience Distribution")
+st.markdown("### Proportion of Experience Levels and Experience Distribution")
 col3, col4 = st.columns(2)
 with col3:
     st.plotly_chart(fig3, use_container_width=True)
@@ -237,7 +220,7 @@ except KeyError as e:
     st.error(f"Missing column for 'Satisfaction by Industry' pie chart: {e}")
 
 # Display Chart Pair 3
-#st.markdown("### Motivation and Satisfaction by Industry")
+st.markdown("### Motivation and Satisfaction by Industry")
 col5, col6 = st.columns(2)
 with col5:
     st.plotly_chart(fig5, use_container_width=True)
@@ -245,7 +228,7 @@ with col6:
     st.plotly_chart(fig6, use_container_width=True)
 
 # Data view and download
-#st.markdown("##View and Download Data")
+st.markdown("### View and Download Data")
 with st.expander("View Data"):
     try:
         st.write(filtered_data)  # Use filtered data
@@ -264,7 +247,7 @@ with st.expander("View Data"):
         st.error(f"Error preparing data for download: {e}")
 
 # Scatter Plot: Motivation vs Satisfaction
-#st.markdown("### Scatter Plot: Motivation vs Satisfaction")
+st.markdown("### Scatter Plot: Motivation vs Satisfaction")
 try:
     scatter_fig = px.scatter(
         filtered_data,  # Use filtered data
