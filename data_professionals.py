@@ -156,27 +156,15 @@ with col2:
 
 #_view1, dwn1, view2, dwn2 = ([0.15,0.20,0.20,0.20])
 
-#with view1:
-    #expander = st.expander("Tools and Industry")
-    #data = datahub[["tools", "industry"]].groupby(by="tools")["industry"].sum()
-    #expander.write(datahub)
+with st.expander("Tools and Industry"):
+    try:
+        # Group data by tools and aggregate industries
+        data = datahub.groupby("tools")["industry"].apply(lambda x: ", ".join(x.unique())).reset_index()
+        data.columns = ["Tools", "Industries"]  # Rename columns for clarity
+        st.write(data)
+    except KeyError as e:
+        st.error(f"Error creating 'Tools and Industry' table: {e}")
 
-
-# Filter Data
-filtered_data = datahub.copy()
-
-if tools:
-    filtered_data = filtered_data[filtered_data["tools"].isin(tools)]
-
-if industry:
-    filtered_data = filtered_data[filtered_data["experience"].isin(industry)]
-
-# Display Filtered Table
-st.title("Filtered Table: Tools and Experience")
-if filtered_data.empty:
-    st.warning("No data available for the selected filters.")
-else:
-    st.write(filtered_data)
 
 # Chart 3: Proportion of Experience Levels
 try:
