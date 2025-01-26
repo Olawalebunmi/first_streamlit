@@ -152,7 +152,13 @@ with col2:
 
 # Data view and download
 #st.markdown("##View and Download Data")
-# for tools and experience
+# source data for tools and experience
+_, view1, dwn1, view2, dwn2 = ([0.15,0.20, 0.20,0.20])
+with view1:
+    expander = st.expander("Tools and Industry")
+    data = datahub[["tools, industry"]].groupby(by="industry")["tools"].sum()
+    expander.write(data)
+
 with st.expander("View Data"):
     try:
         st.write(filtered_data)  # Use filtered data
