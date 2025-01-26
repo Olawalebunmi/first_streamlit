@@ -135,7 +135,7 @@ except KeyError as e:
 
 # Display Chart Pair 1
 st.title("Data Analyst Dashboard")
-st.markdown("### Industry and Tools vs Tools and Experience")
+#st.markdown("### Industry and Tools vs Tools and Experience")
 col1, col2 = st.columns(2)
 with col1:
     st.plotly_chart(fig1, use_container_width=True)
