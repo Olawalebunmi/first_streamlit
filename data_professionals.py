@@ -18,8 +18,12 @@ st.set_page_config(
 
 
 # KPI calculations
-total_respondents = datahub['id'].sum()
-
+if "id" in datahub.columns:
+    datahub['id'] = pd.to_numeric(datahub['id'], errors='coerce')  # Convert non-numeric to NaN
+    total_respondents = datahub['id'].sum()
+else:
+    total_respondents = 0
+    st.error("'id' column not found in the dataset.")
 
 # Sidebar filters
 st.sidebar.header("Choose your Filter:")
