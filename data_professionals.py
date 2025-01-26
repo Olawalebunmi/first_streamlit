@@ -41,9 +41,9 @@ except FileNotFoundError:
 
 
 # KPI calculations
-num_respondents = datahub['Respondent'].nunique()
+num_respondents = datahub['id'].nunique()
 
-num_industry= datahub['Respondent'].nunique()
+num_industry= datahub['industry'].nunique()
 
 num_tools=datahub["tools"].nunique()
 
@@ -57,10 +57,10 @@ with col1:
     st.metric("Number of Respondents", num_respondents)
 
 with col2:
-    st.metric("label:Total_Industry", num_industry)
+    st.metric("Number of Industry", num_industry)
 
 with col3:
-    st.metric("label:Total_Tools", num_tools)
+    st.metric("Nuuumber of Tools", num_tools)
 
 
 
