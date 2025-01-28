@@ -10,6 +10,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
+
 # Page configuration
 st.set_page_config(
     page_title="Datahub Newbies Survey",
@@ -39,11 +40,11 @@ except FileNotFoundError:
 
 # Sidebar filters & widget
 # Sidebar filters
-tools = st.sidebar.multiselect(
-    "Pick your Tools:",
-    options=datahub["tools"].unique() if "tools" in datahub.columns else [],
-    default=[]
-)
+#tools = st.sidebar.multiselect(
+    #"Pick your Tools:",
+    #options=datahub["tools"].unique() if "tools" in datahub.columns else [],
+    #default=[]
+#)
 
 education = st.sidebar.multiselect(
     "Choose your Education Level:",
@@ -65,8 +66,8 @@ industry = st.sidebar.multiselect(
 
 # Apply filters
 filtered_data = datahub.copy()
-if tools:
-    filtered_data = filtered_data[filtered_data["tools"].isin(tools)]
+#if tools:
+    #filtered_data = filtered_data[filtered_data["tools"].isin(tools)]
 if education:
     filtered_data = filtered_data[filtered_data["education"].isin(education)]
 if satisfaction:
